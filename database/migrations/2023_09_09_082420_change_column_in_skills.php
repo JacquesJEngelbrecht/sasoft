@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('skills', function (Blueprint $table) {
-            $table->id();
-            $table->string('skills')->nullable();
-            $table->date('years_exp')->nullable();
-            $table->string('level')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('skills', function (Blueprint $table) {
+            $table->jsonb('skill')->change();
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('skills');
+        Schema::table('skill', function (Blueprint $table) {
+            $table->string('column_name')->change(); 
+        });
     }
 };
