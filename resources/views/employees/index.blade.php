@@ -10,20 +10,13 @@
             <h5>There are {{ $employeeCount }} employees</h5>
         </div>
         <div class="col-md-3">
-            <input type="text" id="employeeSearchInput" class="form-control" placeholder="Search by name, surname, or email...">
+            <input type="text" id="employeeSearchInput" class="form-control" placeholder="Search">
         </div>
         <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button class="btn btn-primary btn-purple-pill" type="submit" class="btn btn-primary">Search</button>
         </div>
-        <!-- <div class="col-md-3">
-            <select class="form-control">
-                @foreach($employees as $employee)
-                    <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
-                @endforeach
-            </select>
-        </div> -->
         <div class="col-md-4 text-right">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
+            <button class="btn btn-primary btn-purple-pill" type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
                 New Employee
             </button>
         </div>
@@ -33,7 +26,7 @@
     </div>
 
 
-        <table class="table table-bordered">
+        <table class="table ">
             <tbody>
                 @foreach($employees as $employee)
                 <tr data-toggle="modal" data-target="#editEmployeeModal-{{ $employee->id }}">
@@ -158,8 +151,6 @@
 
 
     </div>
-    
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">New Employee</button>
 
     <div class="modal fade" id="employeeModal">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -268,14 +259,12 @@
 <script>
     const hasErrors = @json($errors->any());
     const employeeIdFromBlade = @json(isset($employee) ? $employee->id : null);
-    const isEditAction = employeeIdFromBlade !== null;  // Determine if this is an edit action based on the employee's existence
+    const isEditAction = employeeIdFromBlade !== null;
     const formID = isEditAction ? `editEmployeeModal-${employeeIdFromBlade}` : 'createEmployeeModal';
 
-
     $(document).ready(function() {
-        
         if (hasErrors) {
-            $('#${formID}').modal('show');
+            $(`#${formID}`).modal('show');
         }
 
         handleFormLocalStorage(formID);
@@ -336,23 +325,22 @@
     }
 
     function deleteEmployee(employeeId) {
-    $.ajax({
-        url: `/employees/${employeeId}`,
-        type: 'DELETE',
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            if (response.message) {
-                alert(response.message);
+        $.ajax({
+            url: `/employees/${employeeId}`,
+            type: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function(response) {
+                if (response.message) {
+                    alert(response.message);
+                }
+                $('#employeeModal').modal('hide');
+                showUndoNotification(employeeId);
+            },
+            error: function() {
+                alert('Failed to delete the employee. Please try again.');
             }
-            $('#employeeModal').modal('hide');
-            showUndoNotification(employeeId);
-        },
-        error: function() {
-            alert('Failed to delete the employee. Please try again.');
-        }
-    });
-}
-
+        });
+    }
 
     function showUndoNotification(employeeId) {
         const notification = $(`<div>Your item has been deleted. <a href="#" class="undo-btn" data-employee="${employeeId}">Undo</a></div>`);
@@ -374,29 +362,24 @@
                 location.reload();
             },
             error: function(jqXHR, textStatus, errorThrown) {
-    console.error("AJAX error: ", textStatus, errorThrown);
-    alert('Failed to restore the employee. Please try again.');
-}
-
+                console.error("AJAX error: ", textStatus, errorThrown);
+                alert('Failed to restore the employee. Please try again.');
+            }
         });
     }
 
     function handleSearchInput() {
-    $('#employeeSearchInput').on('input', function() {
-        const searchValue = $(this).val().toLowerCase();
-        $('#employeeList option').each(function() {
-            const optionValue = $(this).text().toLowerCase();
-            if (optionValue.includes(searchValue)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
+        $('#employeeSearchInput').on('input', function() {
+            const searchValue = $(this).val().toLowerCase();
+            $('#employeeList option').each(function() {
+                const optionValue = $(this).text().toLowerCase();
+                if (optionValue.includes(searchValue)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
         });
-    });
-}
+    }
 </script>
 @endpush
-
-
-
-    
