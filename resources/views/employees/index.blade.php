@@ -1,33 +1,39 @@
     @extends('employees.layout')
     @section('content')
-    <h5>There are employees</h5>
 
     <div class="container mt-5">
         <div class="row mb-4">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Search...">
-            </div>
-            <div class="col-md-3">
-                <select class="form-control">
-                    <option>Filter Option 1</option>
-                    <option>Filter Option 2</option>
-                </select>
-            </div>
-            <div class="col-md-6 text-right">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
-                    New Employee
-                </button>
-            </div>
+            <form method="GET" action="{{ route('employees.index') }}" class="col-md-12">
+            <div class="row align-items-center">
+        <div class="col-md-3">
+            <h1>Employees</h1>
+            <h5>There are {{ $employeeCount }} employees</h5>
         </div>
+        <div class="col-md-3">
+            <input type="text" id="employeeSearchInput" class="form-control" placeholder="Search by name, surname, or email...">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <!-- <div class="col-md-3">
+            <select class="form-control">
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                @endforeach
+            </select>
+        </div> -->
+        <div class="col-md-4 text-right">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
+                New Employee
+            </button>
+        </div>
+    </div>
+
+        </form>
+    </div>
+
 
         <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Contact Number</th>
-                </tr>
-            </thead>
             <tbody>
                 @foreach($employees as $employee)
                 <tr data-toggle="modal" data-target="#editEmployeeModal-{{ $employee->id }}">
@@ -262,16 +268,19 @@
 <script>
     const hasErrors = @json($errors->any());
     const employeeIdFromBlade = @json(isset($employee) ? $employee->id : null);
-    const formID = employeeIdFromBlade ? `editEmployeeModal-${employeeIdFromBlade}` : 'createEmployeeModal';
+    const isEditAction = employeeIdFromBlade !== null;  // Determine if this is an edit action based on the employee's existence
+    const formID = isEditAction ? `editEmployeeModal-${employeeIdFromBlade}` : 'createEmployeeModal';
+
 
     $(document).ready(function() {
         
         if (hasErrors) {
-            $('#employeeModal').modal('show');
+            $('#${formID}').modal('show');
         }
 
         handleFormLocalStorage(formID);
         handleDeleteAction();
+        handleSearchInput();
     });
 
     function handleFormLocalStorage(formID) {
@@ -371,6 +380,20 @@
 
         });
     }
+
+    function handleSearchInput() {
+    $('#employeeSearchInput').on('input', function() {
+        const searchValue = $(this).val().toLowerCase();
+        $('#employeeList option').each(function() {
+            const optionValue = $(this).text().toLowerCase();
+            if (optionValue.includes(searchValue)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+}
 </script>
 @endpush
 

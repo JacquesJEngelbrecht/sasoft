@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->string('skills')->nullable();
+            $table->jsonb('skills')->nullable();
             $table->date('years_exp')->nullable();
             $table->string('level')->nullable();
+            $table->string('employee_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
