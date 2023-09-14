@@ -1,0 +1,39 @@
+body {
+    background-color: black;
+}
+
+h1, h5 {
+    color: white !important;
+}
+
+.table tbody tr td {
+    background-color: gray;
+    color: white;
+    padding: 15px; 
+    border: none;
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 15px; 
+    width: 100% !important;
+}
+
+.table tbody tr td:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.table tbody tr td:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.btn-purple-pill {
+    border-radius: 50px;
+    background-color: purple !important;
+    border: none !important;
+    color: white !important; 
+}
+
+

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('employees');
 });
+
+Route::resource('employees', EmployeeController::class);
+Route::post('/employees/{employee}/restore', [EmployeeController::class, 'restore'])->name('employees.restore');
+
