@@ -13,9 +13,13 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('skills')->get();
+        $employees = Employee::with('skills')->withCount('skills')->get();
+        $employeeCount = $employees->count();
        
-        return view('employees.index')->with('employees', $employees);
+        return view('employees.index', [
+            'employees' => $employees,
+            'employeeCount' => $employeeCount
+        ]);
     }
 
     /**
@@ -74,9 +78,11 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(StoreEmployeeRequest $request)
     {
-        $employee->update($request->all());
+        $validated = $request->validated();
+
+        Employee::update($validated);
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
     }

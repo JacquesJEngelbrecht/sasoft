@@ -16,7 +16,7 @@ class Skill extends Model
     protected $fillable = [
         'skill',
         'years_exp',
-        'level'
+        'level',
     ];
 
     protected $casts = [
