@@ -78,11 +78,9 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreEmployeeRequest $request)
+    public function update(Request $request, Employee $employee)
     {
-        $validated = $request->validated();
-
-        Employee::update($validated);
+        $employee->update($request->all());
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
     }
